@@ -11,7 +11,7 @@ import { Container } from  "./styles/appStyles.js";
 export default function App() {
   return (
     <Container>
-      <Home />
+      <Home/>
       <StatusBar style="light" />
     </Container>
   );
