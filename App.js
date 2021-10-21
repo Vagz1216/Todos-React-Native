@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppLoading from 'expo-app-loading';
+import { useState } from 'react';
 
 //components
 import Home from "./components/Home.js"
@@ -8,10 +10,30 @@ import Home from "./components/Home.js"
 // styled components
 import { Container } from  "./styles/appStyles.js";
 
+
 export default function App() {
+  const [ready, setReady] = useState(false);
+  //initial todos
+      const initialTodos = [];
+  const [todos, setTodos]  = useState(initialTodos);
+  const loadTodos =() =>{
+    AsyncStorage.getItem('storedTodos').then(data =>{
+      if (data !== null) {
+      setTodos(JSON.parse(data))
+    }}).catch((error) =>console.log(error));
+  }
+  if (!ready) {
+    return(
+      <AppLoading
+        startAsync ={loadTodos}
+        onFinish ={() =>setReady (true)}
+        onError ={console.warn}
+      />
+    )
+  }
   return (
     <Container>
-      <Home/>
+      <Home todos={todos} setTodos={setTodos}/>
       <StatusBar style="light" />
     </Container>
   );
